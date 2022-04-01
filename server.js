@@ -8,6 +8,10 @@ var mongoose = require('mongoose');
 const dotenv = require('dotenv')
 dotenv.config()
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+
 // import the routing file to handle the default (index) route
 var index = require('./routes/app');
 const bookRoutes = require('./routes/books');
@@ -45,6 +49,8 @@ app.use(express.static(path.join(__dirname, 'dist/cms')));
 app.use('/', index);
 app.use('/books', bookRoutes);
 
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(swaggerDocument));
 // establish a connection to the mongo database
 mongoose.connect(process.env.MONGODB_URI,
    { useNewUrlParser: true }, (err, res) => {
